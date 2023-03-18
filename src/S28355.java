@@ -50,7 +50,6 @@ class WriteRead {
 
 
             int i = 0;
-            int counter = 0;
             int am_of_bytes = 0;
             while (fis.available() != 0) {
                 if (i == 0 || i == 251 || i == 65521 || i == 16777213) {
@@ -87,7 +86,6 @@ class WriteRead {
                         break;
                 }
                 allValues.add(i);
-                counter++;
             }
         }
         return allValues;
