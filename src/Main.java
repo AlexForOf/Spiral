@@ -11,10 +11,7 @@ public class Main {
         File file = new File(fileName);
         int maxNum = (dimension.height * dimension.width) * 100;
         WriteRead writeRead = new WriteRead(maxNum, file);
-//        if (!file.exists()){
-            writeRead.writeFile();
-//        }
-        System.out.println(Arrays.toString(writeRead.readFile()));
+        writeRead.writeFile();
         new Spiral(maxNum, writeRead.readFile());
     }
 }
