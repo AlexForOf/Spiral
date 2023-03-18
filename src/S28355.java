@@ -15,9 +15,11 @@ public
             String fileName = "primes.bin";
             File file = new File(fileName);
             int maxNum = (dimension.height * dimension.width) * 100;
+
             WriteRead writeRead = new WriteRead(maxNum, file);
             writeRead.writeFile();
-            new Spiral(maxNum, writeRead.readFile());
+            ArrayList<Integer> primes = writeRead.readFile();
+            new Spiral(maxNum, primes);
         }
 }
 class WriteRead {
@@ -25,12 +27,12 @@ class WriteRead {
     int maxValue;
     File fileName;
 
-    ArrayList<Integer> primeNumbers = new ArrayList<>();
-    long[] allPrimes;
+    ArrayList<Integer> primeNumbers;
 
     public WriteRead(int maxValue, File fileName){
         this.maxValue = maxValue;
         this.fileName = fileName;
+        this.primeNumbers = new ArrayList<>();
     }
 
     public boolean isPrime(int number){
@@ -41,16 +43,11 @@ class WriteRead {
         return true;
     }
 
-    public int[] readFile() throws IOException{
-        int[] allValues;
+    public ArrayList<Integer> readFile() throws IOException{
+        ArrayList<Integer> allValues = new ArrayList<>();
 
         try (InputStream fis = new FileInputStream(fileName)) {
 
-            int length = 0;
-            for (int i = 0; i < allPrimes.length; i++) {
-                length += (int) allPrimes[i];
-            }
-            allValues = new int[length];
 
             int i = 0;
             int counter = 0;
@@ -89,9 +86,8 @@ class WriteRead {
                         i |= ((fis.read() & 0xFF) << 24);
                         break;
                 }
-                allValues[counter] = i;
+                allValues.add(i);
                 counter++;
-
             }
         }
         return allValues;
@@ -108,7 +104,8 @@ class WriteRead {
             long primesForTwoBytes = 0L;
             long primesForThreeBytes = 0L;
             long primesForFourBytes = 0L;
-            allPrimes = new long[4];
+
+            long[] allPrimes = new long[4];
 
 
             for (int i = 1; i < maxValue; i++){
@@ -174,6 +171,7 @@ class WriteRead {
                         ous.write((primeNumbers.get(i) >> 24) & 0xff);
                         break;
                 }
+                System.out.println(primeNumbers.get(i) + " written");
             }
         } catch(FileNotFoundException e){
             throw new RuntimeException(e);
@@ -185,9 +183,9 @@ class WriteRead {
 class Spiral extends Frame {
 
     int maxNum;
-    int[] primes;
+    ArrayList<Integer> primes;
 
-    public Spiral(int maxNum, int[] primes) throws HeadlessException {
+    public Spiral(int maxNum, ArrayList<Integer> primes) throws HeadlessException {
         addComponentListener(
                 new ComponentAdapter() {
                     @Override
@@ -221,9 +219,9 @@ class Spiral extends Frame {
         boolean sign = true;
 
         for (int i = 1; i < maxNum; i++) {
-            if (i == primes[currentPrime]) {
+            if (i == primes.get(currentPrime)) {
                 g.setColor(new Color(255,255,255));
-                if(currentPrime < primes.length - 1){
+                if(currentPrime < primes.size() - 1){
                     currentPrime++;
                 }
                 System.out.println(currentPrime);
